@@ -1,0 +1,93 @@
+<script>
+    var requirejs = {
+        urlArgs: (new Date).getTime()
+    };
+</script>
+
+<script src="../vendor/requirejs/require.js" data-main="../vendor/require.config.js"></script>
+
+
+<script>
+    (function(){
+        var o = {
+            then: function(f, r){
+                console.log(f, r);
+                f(555);
+            }
+        };
+
+
+            require(['../src/promise.js'], function(Z){
+
+                function P(fun)
+                {
+                    Z.call(this, fun);
+                }
+
+                'resolve,reject,all'.split(/,/).map(function(v){
+                    P[v] = Z[v];
+                });
+
+                var p = (new P(function(f, r){f(456);setTimeout(f, 500, 654);})).
+                        then(
+                            function(f){return f;},
+                            function(r){return P.reject(r);}).
+                        then(
+                            function(x){console.log('my fulfill', x)}+'',
+                            function(x){throw new Error('my error');console.log('my reject', x)}).
+                        then(
+                            function(x){console.log('my fulfill 2', x)},
+                            function(x){console.log('my reject 2', x)});
+
+                console.log('my then return', p);
+
+                P.resolve(P.reject('P')).then(null, function(v){
+                    console.log('---------------------', v);
+                });
+
+                P.resolve('P.resolve').then(function(v){
+                    console.log(v);
+                });
+
+                P.reject('P.reject').then(null, function(v){
+                    console.log(v);
+                });
+
+                P.all([
+                    new P(function(f){setTimeout(f, 500, 500);}),
+                    1,
+                    P.resolve(2)
+                ]).then(function(a){console.log('P.all', a);});
+            });
+
+
+        var x = (new Promise(function(f, r){f(123);setTimeout(f, 500, 321);})).
+            then(
+                function(f){return f;},
+                function(r){return Promise.reject(r);}).
+            then(
+                function(x){console.log('fulfill', x)}+'',
+                function(x){throw new Error('test error');console.log('reject', x)}).
+            then(
+                function(x){console.log('fulfill 2', x)},
+                function(x){console.log('reject 2', x)});
+
+        console.log('then return', x);
+
+        Promise.resolve(Promise.reject('Promise')).then(null, function(v){
+            console.log('---------------------', v);
+        });
+        Promise.resolve('Promise.resolve').then(function(v){
+            console.log(v);
+        });
+        Promise.reject('Promise.reject').then(null, function(v){
+            console.log(v);
+        });
+
+        Promise.all([
+            new Promise(function(f){setTimeout(f, 500, 500);}),
+            1,
+            Promise.resolve(2)
+        ]).then(function(a){console.log('Promise.all', a);});
+    })();
+</script>

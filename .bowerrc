@@ -1,0 +1,6 @@
+{
+    "directory": "vendor",
+    "scripts": {
+        "postinstall": "bower-requirejs -c vendor/require.config.js -e requirejs"
+    }
+}
