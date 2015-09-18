@@ -1,0 +1,113 @@
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="../vendor/Vague.js/Vague.js"></script>
+
+<div id="bs-box">
+    <div class="photo" style="background: url('../image/20111117090135772230.jpg') no-repeat 0 0;"></div>
+    <div class="photo" style="background: url('../image/20111117090148561756.jpg') no-repeat 0 0"></div>
+    <div class="photo" style="background: url('../image/20111117090159497279.jpg') no-repeat 0 0"></div>
+</div>
+
+<style>
+    #bs-box {
+        width: 500px;
+        height: 350px;
+        position: relative;
+        overflow: hidden;
+    }
+    #bs-box .photo {width: 100%; height: 100%; position: absolute; top:0; left: 0;}
+</style>
+<script>
+    (function(){
+        function BlurSlider($photos_box){
+
+            var Photos = function($ps){
+                    var doms = [];
+
+                    $ps.each(function(){
+                        var $dom = $(this);
+                        doms.push($dom.data('vague', $dom.Vague()));
+                    });
+
+                    this.turn = function(){
+                        var $dom = doms.pop();
+                        $dom.insertBefore(doms[0]);
+                        doms.unshift($dom);
+                    };
+
+                    this.current = function(){
+                        return doms[doms.length - 1];
+                    };
+                };
+
+            var p = new Photos($photos_box.find('.photo'));
+
+            this.next = function(){
+                var c = p.current(),
+                    v = c.data('vague');
+                v.animate(20, {duration:800}).
+                    done(function(){
+                            c.fadeOut(800, function(){
+                                p.turn();
+                                c.show();
+                                v.animate(0, {duration:0});
+                            });
+                    });
+            };
+
+            this.run = function(t){
+                var me = this;
+                setInterval(function(){
+                    me.next();
+                }, t);
+            };
+        }
+
+        (new BlurSlider($('#bs-box'))).run(4000)
+
+    })();
+
+//    var vague = $('.photo').Vague({
+//        intensity:      3,      // Blur Intensity
+//        forceSVGUrl:    false,   // Force absolute path to the SVG filter,
+//        // default animation options
+//        animationOptions: {
+//            duration: 3000,
+//            easing: 'linear' // here you can use also custom jQuery easing functions
+//        }
+//    });
+
+
+//    var vague = $(".container").Vague({intensity:30});
+//    vague.blur();
+//    $('.btn:not(.animate)').on('click',$.proxy(vague.toggleblur,vague));
+//    $('.btn input').on('keyup blur',function(e){
+//        vague.animate(+$(e.currentTarget).val(),{
+//            duration:800
+//        }).done(function(){
+//            if (window.console)
+//                console.log('Animation Complete!');
+//        });
+//    });
+
+
+    //    var i = 0,
+//        a = 1,
+//        timer,
+//        $x = $('#x');
+//    timer = setInterval(function(){
+//        if (i > 15) clearInterval(timer);
+//
+//        i += 0.1;
+//        a -= 0.01;
+//        console.log(i, a)
+//
+//        $x.blurjs({
+//            source: '#y',
+//            radius: i,
+//            //overlay: 'rgba(255,255,255,1)',
+//            debug: true
+//        }).css('opacity', a)
+//
+//    }, 10);
+
+</script>

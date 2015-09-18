@@ -6,7 +6,8 @@
   ],
   "description": "僅放置實驗或練習範例",
   "dependencies": {
-    "requirejs": "~2",
-    "jquery": "~2"
+    "Vague.js": "vague.js#~0.0.6",
+    "jquery": "~2",
+    "requirejs": "~2"
   }
 }
